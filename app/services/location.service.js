@@ -1,6 +1,5 @@
 const db = require("../models");
 const Location = db.location;
-const user_locations = db.user_locations;
 
 exports.create = (req, res) => {
   // Validate request
@@ -12,15 +11,15 @@ exports.create = (req, res) => {
   }
 
   // Create a Location
-  const location = {
-    lat: req.body.lat,
-    lng: req.body.lng,
-  };
+
 
   // Save Location in the database
-  Location.create(location)
+  Location.create({
+    lat: req.body.lat,
+    lng: req.body.lng,
+    userId: req.body.userId
+  })
     .then(data => {
-      location.setUser(req.body.userId);
       res.send(data);
     })
     .catch(err => {

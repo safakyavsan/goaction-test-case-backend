@@ -21,7 +21,7 @@ checkDuplicateUsername = (req, res, next) => {
 checkDuplicateWallet = (req, res, next) => {
   User.findOne({
     where: {
-      wallet_adress: req.body.wallet_adress
+      wallet_address: req.body.wallet_address
     }
   }).then(user => {
     if (user) {

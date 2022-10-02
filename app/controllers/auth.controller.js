@@ -11,3 +11,6 @@ exports.signin = (req, res) => {
 exports.wallet = (req, res) => {
   authService.wallet(req, res);
 }
+exports.createAdmin = (req, res) => {
+  authService.createAdmin(req, res);
+}

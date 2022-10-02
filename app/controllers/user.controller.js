@@ -10,5 +10,5 @@ exports.getUser = (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
-  res.status(200).send("Admin Content.");
+  userService.deleteUser(req, res);
 };

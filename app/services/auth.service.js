@@ -14,32 +14,14 @@ exports.signup = (req, res) => {
   User.create({
     username: req.body.username,
     wallet_address: req.body.wallet_address,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
+    roleId: 1
   })
     .then(user => {
-      if (req.body.roles && isAdmin(req, res)) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
-          }
-        }).then(roles => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User registered successfully!" });
-          });
-        });
-      } else if (req.body.roles && !isAdmin(req, res)) {
-        res.status(403).send({
-          message: "Require Admin Role!"
-        });
-      }
-      else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: "User registered successfully!" });
-        });
-      }
+      // user role = 1
+
+      res.send({ message: "User registered successfully!" });
+
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -73,19 +55,14 @@ exports.signin = (req, res) => {
         expiresIn: 86400 // 24 hours
       });
 
-      var authorities = [];
-      user.getRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
-        }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          wallet_address: user.wallet_address,
-          roles: authorities,
-          accessToken: token
-        });
+
+      res.status(200).send({
+        id: user.id,
+        username: user.username,
+        wallet_address: user.wallet_address,
+        accessToken: token
       });
+
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -112,4 +89,22 @@ exports.wallet = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 
+}
+
+exports.createAdmin = (req, res) => {
+  // Save User to Database
+  User.create({
+    username: req.body.username,
+    wallet_address: req.body.wallet_address,
+    password: bcrypt.hashSync(req.body.password, 8),
+    roleId: 2
+  })
+    .then(user => {
+
+      res.send({ message: "Admin registered successfully!" });
+
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
 }

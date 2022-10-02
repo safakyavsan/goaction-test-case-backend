@@ -2,7 +2,7 @@ const db = require("../models");
 const User = db.user;
 
 exports.getUsers = (req, res) => {
-  User.findAll()
+  User.findAll({ where: { roleId: 1 } })
     .then(data => {
       res.send(data);
     })
@@ -30,7 +30,7 @@ exports.getUser = (req, res) => {
 exports.deleteUser = (req, res) => {
   User.destroy({ where: { id: req.params.userId } })
     .then(data => {
-      res.send(data);
+      res.send({ message: "User Deleted!" });
     })
     .catch(err => {
       res.status(500).send({
